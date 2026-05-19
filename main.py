@@ -15,7 +15,7 @@ API_KEY = config["api_key"]
 API_SECRET = config["api_secret"]
 USERNAME = config["username"]
 CACHE_FILE = config["cache_file"]
-THRESHOLD = config["threshold"]
+THRESHOLD = config["scrobbles_threshold"]
 LIMIT_FETCH = config["limit_fetch"]
 
 def get_targets():
