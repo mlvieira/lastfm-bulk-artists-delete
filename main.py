@@ -53,17 +53,29 @@ def delete_artist(page, artist):
         if form.is_visible():
             success = True
             break
-        time.sleep(2)
+        print(f"Modal not ready for {artist}, attempt {attempt+1}... waiting.")
+        time.sleep(3)
 
     if not success:
         print(f"Modal failed to load for {artist}, refreshing page...")
-        page.reload()
+        page.reload(wait_until="networkidle")
+        time.sleep(2)
         return False
 
     form.locator("#id_confirm").check()
     form.locator("button.btn-primary").click()
     print(f"Deletion submitted for {artist}. Waiting for redirect...")
-    page.wait_for_url("**/library/artists", timeout=20000)
+
+    try:
+        page.wait_for_url("**/library/artists", timeout=20000)
+    except:
+        page.reload()
+        if page.locator(".delete-icon").count() == 0:
+            print("Redirect didn't happen, but scrobbles are gone")
+        else:
+            print("Redirect failed. Retrying...")
+            return False
+
     time.sleep(2.0)
     return True
 
